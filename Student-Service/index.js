@@ -12,6 +12,9 @@ mongoose.connect(host)
 .catch(error=>console.error('There was an error connectiong to MongoDB',error));
 const db=mongoose.connection;
 
+const StudentRoute=require('./Routes/Student');
+app.use('/course',StudentRoute);
+
 app.listen(port,()=>{
     console.log(`The Server Is Executing On Port:http://localhost:${port}`);
 });
