@@ -2,8 +2,9 @@ const express = require('express');
 const router = express.Router();
 const Student = require('../Model/StudentModel');
 const Course = require('../Model/CourseModel');
+const verifyToken=require('../Middleware/auth');
 
-router.get('/', async (req, res) => {
+router.get('/',verifyToken, async (req, res) => {
     try {
         const students = await Student.find();
         res.json(students);
@@ -12,7 +13,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/add', async (req, res) => {
+router.post('/add',verifyToken, async (req, res) => {
     const student = new Student(req.body);
     try {
         const newStudent = await student.save();
@@ -22,7 +23,7 @@ router.post('/add', async (req, res) => {
     }
 });
 
-router.post('/enroll/:etudiant_id/:cours_id', async (req, res) => {
+router.post('/enroll/:etudiant_id/:cours_id',verifyToken, async (req, res) => {
     try {
         const student = await Student.findById(req.params.etudiant_id);
         const course = await Course.findById(req.params.cours_id);
@@ -42,7 +43,7 @@ router.post('/enroll/:etudiant_id/:cours_id', async (req, res) => {
     }
 });
 
-router.get('/enrolledCourses/:etudiant_id', async (req, res) => {
+router.get('/enrolledCourses/:etudiant_id',verifyTokenv, async (req, res) => {
     try {
         const student = await Student.findById(req.params.etudiant_id).populate('enrolledCourses');
         if (!student) {

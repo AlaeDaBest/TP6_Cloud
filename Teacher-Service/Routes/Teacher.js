@@ -4,7 +4,7 @@ const Teacher = require('../Model/TeacherModel');
 const Course = require('../Model/CourseModel');
 const Student = require('../Model/StudentModel'); 
 
-router.get('/', async (req, res) => {
+router.get('/',verifyToken, async (req, res) => {
     try {
         const teachers=await Teacher.find();
         res.json(teachers);
@@ -13,7 +13,7 @@ router.get('/', async (req, res) => {
     }
 });
 
-router.post('/add', async (req, res) => {
+router.post('/add',verifyToken, async (req, res) => {
     const teacher = new Teacher(req.body);
     try {
         const newTeacher = await teacher.save();
@@ -23,7 +23,7 @@ router.post('/add', async (req, res) => {
     }
 });
 
-router.post('/assign/:professeur_id/:cours_id', async (req, res) => {
+router.post('/assign/:professeur_id/:cours_id',verifyToken, async (req, res) => {
     try {
         const teacher = await Teacher.findById(req.params.professeur_id);
         const course = await Course.findById(req.params.cours_id);
@@ -48,7 +48,7 @@ router.post('/assign/:professeur_id/:cours_id', async (req, res) => {
     }
 });
 
-router.get('/enrolledStudents/:cours_id', async (req, res) => {
+router.get('/enrolledStudents/:cours_id',verifyToken, async (req, res) => {
     try {
         const course = await Course.findById(req.params.cours_id).populate('enrolledStudents');
         if (!course) {
